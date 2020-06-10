@@ -6,12 +6,9 @@ wmschema=org.gnome.desktop.wm.keybindings
 shellschema=org.gnome.shell.keybindings
 keysschema=org.gnome.settings-daemon.plugins.media-keys
 
-read -r -d '' terminal << EOF
-[custom0]
-binding='<Super>Return'
-command='gnome-terminal'
-name='Terminal'
-EOF
+gsettings set org.gnome.mutter dynamic-workspaces false
+gsettings set org.gnome.desktop.wm.preferences num-workspaces 8
+gsettings set org.gnome.desktop.input-sources xkb-options "['lv3:switch', 'caps:none', 'compose:ralt']"
 
 for k in $(seq 0 7) ; do
 	index=$(($k+1))
@@ -32,6 +29,17 @@ gsettings set $wmschema move-to-workspace-down "['<Super><Shift>Down']"
 
 gsettings set $wmschema close "['<Super>q']"
 gsettings set $keysschema screensaver "['<Super>Escape']"
+
+gsettings set org.gnome.desktop.media-handling automount false
+gsettings set org.gnome.desktop.media-handling automount-open false
+
+read -r -d '' terminal << EOF
+[custom0]
+binding='<Super>Return'
+command='gnome-terminal'
+name='Terminal'
+EOF
+
 
 echo "$terminal" | dconf load /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/
 gsettings set $keysschema custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
